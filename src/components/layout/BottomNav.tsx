@@ -1,15 +1,20 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Users, CreditCard, BarChart2, Settings } from 'lucide-react'
+import { LayoutDashboard, Users, CreditCard, BarChart2, Settings, GitBranch } from 'lucide-react'
+import { useAuth } from '../../context/AuthContext'
 
-const items = [
+const baseItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/staff', icon: Users, label: 'Staff' },
   { to: '/transactions', icon: CreditCard, label: 'Transactions' },
   { to: '/reports', icon: BarChart2, label: 'Reports' },
-  { to: '/settings', icon: Settings, label: 'Settings' },
 ]
 
 export default function BottomNav() {
+  const { user } = useAuth()
+  const items = user?.role === 'general_manager'
+    ? [...baseItems, { to: '/branches', icon: GitBranch, label: 'Branches' }, { to: '/settings', icon: Settings, label: 'Settings' }]
+    : [...baseItems, { to: '/settings', icon: Settings, label: 'Settings' }]
+
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 z-40">
       {items.map(({ to, icon: Icon, label }) => (

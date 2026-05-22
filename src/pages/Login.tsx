@@ -7,7 +7,7 @@ export default function Login() {
   const navigate = useNavigate()
   const { signIn } = useAuth()
 
-  const [form, setForm] = useState({ email: '', password: '' })
+  const [form, setForm] = useState({ phone: '+251', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -16,8 +16,8 @@ export default function Login() {
     setError('')
     setLoading(true)
     try {
-      const { data } = await authApi.login(form)
-      signIn(data.accessToken, data.refreshToken, data.business.name)
+      const { data } = await authApi.login({ phone: form.phone, password: form.password })
+      signIn(data.accessToken, data.refreshToken, data.businessName)
       navigate('/dashboard')
     } catch (err: any) {
       setError(err.response?.data?.message ?? 'Invalid credentials')
@@ -36,14 +36,13 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm text-gray-600">Email address</label>
+            <label className="text-sm text-gray-600">Phone Number</label>
             <input
-              type="email"
-              placeholder="owner@business.com"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              type="tel"
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
               required
-              className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 

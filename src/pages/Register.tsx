@@ -16,7 +16,8 @@ export default function Register() {
     setError('')
     setLoading(true)
     try {
-      const { data } = await authApi.register(form)
+      const payload = { ...form, email: form.email || undefined }
+      const { data } = await authApi.register(payload)
       signIn(data.accessToken, data.refreshToken, data.business.name)
       navigate('/dashboard')
     } catch (err: any) {
@@ -59,13 +60,12 @@ export default function Register() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm text-gray-600">Email</label>
+            <label className="text-sm text-gray-600">Email <span className="text-gray-400">(optional)</span></label>
             <input
               type="email"
               placeholder="owner@business.com"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              required
               className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>

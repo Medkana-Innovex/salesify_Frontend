@@ -30,7 +30,8 @@ export interface Transaction {
   transactedAt: string
   createdAt: string
   branch: { id: string; name: string }
-  staff: { id: string; fullName: string; code: string | null } | null
+  staff: { id: string; fullName: string; code: string | null }
+  tipAmount: string | null
 }
 
 export interface DashboardSummary {

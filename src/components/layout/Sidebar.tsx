@@ -1,18 +1,28 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Users, CreditCard, BarChart2, Settings, TrendingUp, LogOut } from 'lucide-react'
+import { LayoutDashboard, Users, CreditCard, BarChart2, Settings, TrendingUp, LogOut, GitBranch } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import * as authApi from '../../api/auth'
 
-const items = [
+const baseItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/staff', icon: Users, label: 'Staff' },
   { to: '/transactions', icon: CreditCard, label: 'Transactions' },
   { to: '/reports', icon: BarChart2, label: 'Reports' },
+]
+
+const gmItems = [
+  { to: '/branches', icon: GitBranch, label: 'Branches' },
+]
+
+const bottomItems = [
   { to: '/settings', icon: Settings, label: 'Settings' },
 ]
 
 export default function Sidebar() {
   const { businessName, user, signOut } = useAuth()
+  const items = user?.role === 'general_manager'
+    ? [...baseItems, ...gmItems, ...bottomItems]
+    : [...baseItems, ...bottomItems]
   const navigate = useNavigate()
 
   const handleLogout = async () => {

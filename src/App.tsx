@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard'
 import Staff from './pages/Staff'
 import Transactions from './pages/Transactions'
 import Reports from './pages/Reports'
+import Branches from './pages/Branches'
 import Settings from './pages/Settings'
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="/staff" element={<AppLayout><Staff /></AppLayout>} />
           <Route path="/transactions" element={<AppLayout><Transactions /></AppLayout>} />
           <Route path="/reports" element={<AppLayout><Reports /></AppLayout>} />
+          <Route path="/branches" element={<AppLayout><Branches /></AppLayout>} />
           <Route path="/settings" element={<AppLayout><Settings /></AppLayout>} />
 
           <Route path="*" element={<Navigate to="/" replace />} />

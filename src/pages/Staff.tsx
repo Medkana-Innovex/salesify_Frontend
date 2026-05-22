@@ -23,8 +23,8 @@ interface AddStaffModalProps {
 }
 
 function AddStaffModal({ branches, creatorRole, onClose, onCreated }: AddStaffModalProps) {
-  const assignedRole = creatorRole === 'general_manager' ? 'branch_manager' : 'staff'
-  const [form, setForm] = useState({ fullName: '', code: '', pin: '', role: assignedRole, branchId: '' })
+  const defaultRole = creatorRole === 'general_manager' ? 'branch_manager' : 'staff'
+  const [form, setForm] = useState({ fullName: '', code: '', phone: '+251', pin: '', role: defaultRole, branchId: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -33,8 +33,13 @@ function AddStaffModal({ branches, creatorRole, onClose, onCreated }: AddStaffMo
     setError('')
     setLoading(true)
     try {
-      const payload: any = { fullName: form.fullName, code: form.code, pin: form.pin, role: form.role }
-      if (form.role === 'branch_manager' && form.branchId) payload.branchId = form.branchId
+      const payload: any = { fullName: form.fullName, role: form.role, branchId: form.branchId || undefined }
+      if (form.role === 'branch_manager') {
+        payload.phone = form.phone
+        payload.pin = form.pin
+      } else {
+        payload.code = form.code
+      }
       const { data } = await staffApi.createStaff(payload)
       onCreated(data)
     } catch (err: any) {
@@ -72,34 +77,21 @@ function AddStaffModal({ branches, creatorRole, onClose, onCreated }: AddStaffMo
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm text-gray-600">Staff Code</label>
-            <input
-              type="text"
-              placeholder="e.g. 101"
-              value={form.code}
-              onChange={(e) => setForm({ ...form, code: e.target.value })}
-              required
-              className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm text-gray-600">PIN</label>
-            <input
-              type="password"
-              placeholder="4–10 digits"
-              value={form.pin}
-              onChange={(e) => setForm({ ...form, pin: e.target.value })}
-              required
-              className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
             <label className="text-sm text-gray-600">Role</label>
-            <div className="border border-gray-200 rounded-xl px-4 py-3 text-gray-500 bg-gray-50 capitalize">
-              {assignedRole.replace('_', ' ')}
-            </div>
+            {creatorRole === 'general_manager' ? (
+              <select
+                value={form.role}
+                onChange={(e) => setForm({ ...form, role: e.target.value, pin: '' })}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="branch_manager">Branch Manager</option>
+                <option value="staff">Staff</option>
+              </select>
+            ) : (
+              <div className="border border-gray-200 rounded-xl px-4 py-3 text-gray-500 bg-gray-50">
+                Staff
+              </div>
+            )}
           </div>
 
           {creatorRole === 'general_manager' && (
@@ -116,6 +108,44 @@ function AddStaffModal({ branches, creatorRole, onClose, onCreated }: AddStaffMo
                   <option key={b.id} value={b.id}>{b.name}</option>
                 ))}
               </select>
+            </div>
+          )}
+
+          {form.role === 'branch_manager' ? (
+            <>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm text-gray-600">Phone Number</label>
+                <input
+                  type="tel"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  required
+                  className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm text-gray-600">Password</label>
+                <input
+                  type="password"
+                  placeholder="Min 4 characters"
+                  value={form.pin}
+                  onChange={(e) => setForm({ ...form, pin: e.target.value })}
+                  required
+                  className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm text-gray-600">Staff Code</label>
+              <input
+                type="text"
+                placeholder="e.g. 101"
+                value={form.code}
+                onChange={(e) => setForm({ ...form, code: e.target.value })}
+                required
+                className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
             </div>
           )}
 
