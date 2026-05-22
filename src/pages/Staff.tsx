@@ -174,6 +174,7 @@ export default function Staff() {
   const [staffList, setStaffList] = useState<Staff[]>([])
   const [branches, setBranches] = useState<Branch[]>([])
   const [search, setSearch] = useState('')
+  const [roleFilter, setRoleFilter] = useState<'all' | 'branch_manager' | 'staff'>('all')
   const [showModal, setShowModal] = useState(false)
   const [loading, setLoading] = useState(true)
 
@@ -187,10 +188,12 @@ export default function Staff() {
     }).finally(() => setLoading(false))
   }, [user])
 
-  const filtered = staffList.filter((s) =>
-    s.fullName.toLowerCase().includes(search.toLowerCase()) ||
-    (s.code ?? '').toLowerCase().includes(search.toLowerCase())
-  )
+  const filtered = staffList.filter((s) => {
+    const matchesSearch = s.fullName.toLowerCase().includes(search.toLowerCase()) ||
+      (s.code ?? '').toLowerCase().includes(search.toLowerCase())
+    const matchesRole = roleFilter === 'all' || s.role === roleFilter
+    return matchesSearch && matchesRole
+  })
 
   const handleToggleActive = async (staff: Staff) => {
     try {
@@ -227,7 +230,25 @@ export default function Staff() {
         />
       </div>
 
-      <p className="text-gray-500 text-sm mb-4">{staffList.length} staff member{staffList.length !== 1 ? 's' : ''}</p>
+      {user?.role === 'general_manager' && (
+        <div className="flex gap-2 mb-5">
+          {(['all', 'branch_manager', 'staff'] as const).map((r) => (
+            <button
+              key={r}
+              onClick={() => setRoleFilter(r)}
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+                roleFilter === r
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white text-gray-600 border border-gray-200'
+              }`}
+            >
+              {r === 'all' ? 'All' : r === 'branch_manager' ? 'Branch Managers' : 'Staff'}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <p className="text-gray-500 text-sm mb-4">{filtered.length} staff member{filtered.length !== 1 ? 's' : ''}</p>
 
       {/* Staff List */}
       {loading ? (
