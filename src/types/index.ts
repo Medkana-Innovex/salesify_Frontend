@@ -16,6 +16,7 @@ export interface Staff {
   id: string
   fullName: string
   code: string | null
+  phone: string | null
   role: 'general_manager' | 'branch_manager' | 'staff'
   branchId: string | null
   branch?: { id: string; name: string }

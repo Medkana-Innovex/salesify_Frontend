@@ -276,7 +276,9 @@ export default function Staff() {
                   </span>
                 </div>
                 <p className="text-gray-500 text-sm mt-0.5">
-                  {staff.branch?.name ?? 'No branch'} · Code: <span className="font-semibold text-blue-600">{staff.code ?? '—'}</span>
+                  {staff.branch?.name ?? 'No branch'}
+                  {staff.code ? <> · Code: <span className="font-semibold text-blue-600">{staff.code}</span></> : null}
+                  {staff.phone ? <> · {staff.phone}</> : null}
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5 capitalize">
                   {staff.role.replace('_', ' ')}
