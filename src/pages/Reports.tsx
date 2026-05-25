@@ -103,7 +103,7 @@ export default function Reports() {
         <button
           onClick={handleExport}
           disabled={exporting}
-          className="flex items-center gap-2 text-red-500 bg-red-50 text-sm font-medium px-4 py-2.5 rounded-xl disabled:opacity-60"
+          className="flex items-center gap-2 bg-lemon-400 text-gray-900 text-sm font-semibold px-4 py-2.5 rounded-xl disabled:opacity-60"
         >
           <Download size={15} />
           {exporting ? 'Exporting…' : 'Export PDF'}
@@ -139,11 +139,11 @@ export default function Reports() {
               <p className="text-xs text-gray-500 uppercase tracking-wide">Total Revenue</p>
               <p className="text-xl font-bold text-gray-900 mt-1">ETB {totalRevenue.toFixed(2)}</p>
             </div>
-            <div className="bg-white rounded-2xl p-4 shadow-sm border-l-4 border-amber-400">
+            <div className="bg-white rounded-2xl p-4 shadow-sm border-l-4 border-lemon-400">
               <p className="text-xs text-gray-500 uppercase tracking-wide">Total Transactions</p>
               <p className="text-xl font-bold text-gray-900 mt-1">{totalTx}</p>
             </div>
-            <div className="bg-white rounded-2xl p-4 shadow-sm border-l-4 border-purple-400 col-span-2 md:col-span-1">
+            <div className="bg-white rounded-2xl p-4 shadow-sm border-l-4 border-lemon-400 col-span-2 md:col-span-1">
               <p className="text-xs text-gray-500 uppercase tracking-wide">Avg Transaction</p>
               <p className="text-xl font-bold text-gray-900 mt-1">ETB {avgTx.toFixed(2)}</p>
             </div>
@@ -156,16 +156,27 @@ export default function Reports() {
             {summary.length > 0 && (
               <div className="bg-white rounded-2xl p-4 shadow-sm mb-5 md:mb-0">
                 <p className="font-semibold text-gray-800 mb-4">Branch Summary</p>
-                <div className="flex flex-col gap-3">
-                  {summary.map((b) => (
-                    <div key={b.branchId} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
-                      <div>
-                        <p className="font-medium text-gray-800 text-sm">{b.branchName}</p>
-                        <p className="text-gray-400 text-xs">{b.transactionCount} transactions</p>
+                <div className="flex flex-col gap-4">
+                  {summary.map((b) => {
+                    const pct = totalRevenue > 0 ? Math.round((Number(b.totalSales) / totalRevenue) * 100) : 0
+                    return (
+                      <div key={b.branchId}>
+                        <div className="flex items-center justify-between mb-1">
+                          <div>
+                            <p className="font-medium text-gray-800 text-sm">{b.branchName}</p>
+                            <p className="text-gray-400 text-xs">{b.transactionCount} transactions</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-bold text-gray-900 text-sm">ETB {Number(b.totalSales).toFixed(2)}</p>
+                            <p className="text-xs text-lemon-600 font-medium">{pct}%</p>
+                          </div>
+                        </div>
+                        <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-lemon-400 rounded-full" style={{ width: `${pct}%` }} />
+                        </div>
                       </div>
-                      <p className="font-bold text-gray-900">ETB {Number(b.totalSales).toFixed(2)}</p>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               </div>
             )}
@@ -179,7 +190,7 @@ export default function Reports() {
                 <div className="flex flex-col gap-4">
                   {staffRows.map((row, i) => {
                     const pct = Math.round((row.totalSales / maxStaffSales) * 100)
-                    const colors = ['bg-lemon-400', 'bg-green-500', 'bg-amber-500', 'bg-purple-500']
+                    const colors = ['bg-lemon-400', 'bg-lemon-500', 'bg-lemon-300', 'bg-lemon-600']
                     const color = colors[i % colors.length]
                     return (
                       <div key={row.staffId}>
