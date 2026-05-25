@@ -76,7 +76,7 @@ export default function Settings() {
           {!editing && (
             <button
               onClick={() => setEditing(true)}
-              className="flex items-center gap-1.5 text-blue-600 text-sm font-medium"
+              className="flex items-center gap-1.5 text-lemon-600 text-sm font-medium"
             >
               <Pencil size={14} /> Edit
             </button>
@@ -90,7 +90,7 @@ export default function Settings() {
               <input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400"
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -98,7 +98,7 @@ export default function Settings() {
               <input
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400"
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -107,7 +107,7 @@ export default function Settings() {
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400"
               />
             </div>
             {saveError && <p className="text-red-500 text-sm">{saveError}</p>}
@@ -121,7 +121,7 @@ export default function Settings() {
               <button
                 onClick={handleSave}
                 disabled={saveLoading}
-                className="flex-1 bg-blue-600 text-white text-sm font-semibold py-3 rounded-xl disabled:opacity-60"
+                className="flex-1 bg-lemon-400 text-gray-900 text-sm font-semibold py-3 rounded-xl disabled:opacity-60"
               >
                 {saveLoading ? 'Saving…' : 'Save'}
               </button>

@@ -6,7 +6,7 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-between py-16 px-6"
-      style={{ background: 'linear-gradient(160deg, #3b5fc0 0%, #4b6ee8 50%, #5b7cf5 100%)' }}>
+      style={{ background: 'linear-gradient(160deg, #557d24 0%, #6fa42e 50%, #8dc63f 100%)' }}>
 
       {/* Logo */}
       <div className="flex-1 flex flex-col items-center justify-center gap-6">
@@ -26,7 +26,7 @@ export default function Landing() {
       <div className="w-full max-w-sm flex flex-col gap-3">
         <button
           onClick={() => navigate('/login')}
-          className="w-full bg-white text-blue-600 font-semibold text-lg py-4 rounded-2xl"
+          className="w-full bg-white text-lemon-600 font-semibold text-lg py-4 rounded-2xl"
         >
           Sign In
         </button>

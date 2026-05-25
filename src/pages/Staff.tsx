@@ -9,7 +9,7 @@ import Portal from '../components/ui/Portal'
 function Avatar({ name }: { name: string }) {
   const initials = name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()
   return (
-    <div className="w-11 h-11 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-semibold text-sm flex-shrink-0">
+    <div className="w-11 h-11 rounded-full bg-lemon-100 text-lemon-600 flex items-center justify-center font-semibold text-sm flex-shrink-0">
       {initials}
     </div>
   )
@@ -72,7 +72,7 @@ function AddStaffModal({ branches, creatorRole, onClose, onCreated }: AddStaffMo
               value={form.fullName}
               onChange={(e) => setForm({ ...form, fullName: e.target.value })}
               required
-              className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400"
             />
           </div>
 
@@ -82,7 +82,7 @@ function AddStaffModal({ branches, creatorRole, onClose, onCreated }: AddStaffMo
               <select
                 value={form.role}
                 onChange={(e) => setForm({ ...form, role: e.target.value, pin: '' })}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400"
               >
                 <option value="branch_manager">Branch Manager</option>
                 <option value="staff">Staff</option>
@@ -101,7 +101,7 @@ function AddStaffModal({ branches, creatorRole, onClose, onCreated }: AddStaffMo
                 value={form.branchId}
                 onChange={(e) => setForm({ ...form, branchId: e.target.value })}
                 required
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400"
               >
                 <option value="">Select branch</option>
                 {branches.map((b) => (
@@ -120,7 +120,7 @@ function AddStaffModal({ branches, creatorRole, onClose, onCreated }: AddStaffMo
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
                   required
-                  className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -131,7 +131,7 @@ function AddStaffModal({ branches, creatorRole, onClose, onCreated }: AddStaffMo
                   value={form.pin}
                   onChange={(e) => setForm({ ...form, pin: e.target.value })}
                   required
-                  className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400"
                 />
               </div>
             </>
@@ -144,7 +144,7 @@ function AddStaffModal({ branches, creatorRole, onClose, onCreated }: AddStaffMo
                 value={form.code}
                 onChange={(e) => setForm({ ...form, code: e.target.value })}
                 required
-                className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400"
               />
             </div>
           )}
@@ -157,7 +157,7 @@ function AddStaffModal({ branches, creatorRole, onClose, onCreated }: AddStaffMo
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white font-semibold py-3.5 rounded-2xl disabled:opacity-60"
+            className="w-full bg-lemon-400 text-gray-900 font-semibold py-3.5 rounded-2xl disabled:opacity-60"
           >
             {loading ? 'Adding…' : 'Add Staff'}
           </button>
@@ -211,7 +211,7 @@ export default function Staff() {
         <h1 className="text-2xl font-bold text-gray-900">Staff Members</h1>
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 bg-blue-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl"
+          className="flex items-center gap-2 bg-lemon-400 text-gray-900 text-sm font-semibold px-4 py-2.5 rounded-xl"
         >
           <Plus size={16} />
           Add Staff
@@ -226,7 +226,7 @@ export default function Staff() {
           placeholder="Search staff by name or code..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          className="w-full border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-lemon-400 bg-white"
         />
       </div>
 
@@ -238,7 +238,7 @@ export default function Staff() {
               onClick={() => setRoleFilter(r)}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
                 roleFilter === r
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-lemon-400 text-gray-900'
                   : 'bg-white text-gray-600 border border-gray-200'
               }`}
             >
@@ -277,7 +277,7 @@ export default function Staff() {
                 </div>
                 <p className="text-gray-500 text-sm mt-0.5">
                   {staff.branch?.name ?? 'No branch'}
-                  {staff.code ? <> · Code: <span className="font-semibold text-blue-600">{staff.code}</span></> : null}
+                  {staff.code ? <> · Code: <span className="font-semibold text-lemon-600">{staff.code}</span></> : null}
                   {staff.phone ? <> · {staff.phone}</> : null}
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5 capitalize">

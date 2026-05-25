@@ -49,7 +49,7 @@ function FilterPanel({ filters, branches, showBranch, onChange, onApply, onClear
                 <select
                   value={filters.branchId}
                   onChange={(e) => onChange({ ...filters, branchId: e.target.value })}
-                  className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400"
                 >
                   <option value="">All branches</option>
                   {branches.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
@@ -59,19 +59,19 @@ function FilterPanel({ filters, branches, showBranch, onChange, onApply, onClear
             <div className="flex flex-col gap-1.5">
               <label className="text-xs text-gray-500">From</label>
               <input type="date" value={filters.from} onChange={(e) => onChange({ ...filters, from: e.target.value })}
-                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400" />
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-xs text-gray-500">To</label>
               <input type="date" value={filters.to} onChange={(e) => onChange({ ...filters, to: e.target.value })}
-                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400" />
             </div>
           </div>
 
           {/* Pinned buttons */}
           <div className="flex gap-3 px-6 py-4 border-t border-gray-100">
             <button onClick={onClear} className="flex-1 border border-gray-200 text-gray-600 text-sm font-medium py-3 rounded-xl">Clear</button>
-            <button onClick={() => { onApply(); onClose() }} className="flex-1 bg-blue-600 text-white text-sm font-semibold py-3 rounded-xl">Apply</button>
+            <button onClick={() => { onApply(); onClose() }} className="flex-1 bg-lemon-400 text-gray-900 text-sm font-semibold py-3 rounded-xl">Apply</button>
           </div>
         </div>
       </div>
@@ -83,7 +83,7 @@ function FilterPanel({ filters, branches, showBranch, onChange, onApply, onClear
           <div className="flex flex-col gap-1.5 flex-1">
             <label className="text-xs text-gray-500">Branch</label>
             <select value={filters.branchId} onChange={(e) => onChange({ ...filters, branchId: e.target.value })}
-              className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400">
               <option value="">All branches</option>
               {branches.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
             </select>
@@ -92,14 +92,14 @@ function FilterPanel({ filters, branches, showBranch, onChange, onApply, onClear
         <div className="flex flex-col gap-1.5 flex-1">
           <label className="text-xs text-gray-500">From</label>
           <input type="date" value={filters.from} onChange={(e) => onChange({ ...filters, from: e.target.value })}
-            className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400" />
         </div>
         <div className="flex flex-col gap-1.5 flex-1">
           <label className="text-xs text-gray-500">To</label>
           <input type="date" value={filters.to} onChange={(e) => onChange({ ...filters, to: e.target.value })}
-            className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400" />
         </div>
-        <button onClick={onApply} className="bg-blue-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl">Apply</button>
+        <button onClick={onApply} className="bg-lemon-400 text-gray-900 text-sm font-semibold px-5 py-2.5 rounded-xl">Apply</button>
         <button onClick={onClear} className="text-gray-500 text-sm font-medium px-3 py-2.5 rounded-xl border border-gray-200">Clear</button>
       </div>
     </>
@@ -158,7 +158,7 @@ export default function Transactions() {
         <button
           onClick={() => setShowFilters(!showFilters)}
           className={`flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-xl border ${
-            showFilters ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-600 border-gray-200'
+            showFilters ? 'bg-lemon-400 text-gray-900 border-lemon-400' : 'bg-white text-gray-600 border-gray-200'
           }`}
         >
           <Filter size={15} />
@@ -187,7 +187,7 @@ export default function Transactions() {
           placeholder="Search by staff name, code or Telebirr ref..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          className="w-full border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-lemon-400 bg-white"
         />
       </div>
 
@@ -206,14 +206,14 @@ export default function Transactions() {
         <div className="flex flex-col gap-3">
           {filtered.map((tx) => (
             <div key={tx.id} className="bg-white rounded-2xl px-4 py-4 shadow-sm flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-semibold text-sm flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-lemon-100 text-lemon-600 flex items-center justify-center font-semibold text-sm flex-shrink-0">
                 {tx.staff ? tx.staff.fullName.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase() : '?'}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <p className="font-semibold text-gray-900 text-sm truncate">{tx.staff?.fullName ?? 'Unknown'}</p>
                   {tx.staff?.code && (
-                    <span className="text-xs text-blue-600 font-medium bg-blue-50 px-2 py-0.5 rounded-full">
+                    <span className="text-xs text-lemon-600 font-medium bg-lemon-50 px-2 py-0.5 rounded-full">
                       #{tx.staff.code}
                     </span>
                   )}

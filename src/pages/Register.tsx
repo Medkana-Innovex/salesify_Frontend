@@ -44,7 +44,7 @@ export default function Register() {
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
-              className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-lemon-400"
             />
           </div>
 
@@ -55,7 +55,7 @@ export default function Register() {
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
               required
-              className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400"
             />
           </div>
 
@@ -66,7 +66,7 @@ export default function Register() {
               placeholder="owner@business.com"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-lemon-400"
             />
           </div>
 
@@ -78,7 +78,7 @@ export default function Register() {
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               required
-              className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-lemon-400"
             />
           </div>
 
@@ -87,7 +87,7 @@ export default function Register() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-600 text-white font-semibold py-4 rounded-2xl mt-2 disabled:opacity-60"
+            className="bg-lemon-400 text-gray-900 font-semibold py-4 rounded-2xl mt-2 disabled:opacity-60"
           >
             {loading ? 'Creating…' : 'Create Business'}
           </button>

@@ -50,7 +50,7 @@ function BranchModal({ initial = '', title, submitLabel, onClose, onSubmit }: Br
                 onChange={(e) => setName(e.target.value)}
                 required
                 autoFocus
-                className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400"
               />
             </div>
             {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -58,7 +58,7 @@ function BranchModal({ initial = '', title, submitLabel, onClose, onSubmit }: Br
               <button
                 type="submit"
                 disabled={loading || !name.trim()}
-                className="w-full bg-blue-600 text-white font-semibold py-3.5 rounded-2xl disabled:opacity-60"
+                className="w-full bg-lemon-400 text-gray-900 font-semibold py-3.5 rounded-2xl disabled:opacity-60"
               >
                 {loading ? 'Saving…' : submitLabel}
               </button>
@@ -168,7 +168,7 @@ export default function Branches() {
         <h1 className="text-2xl font-bold text-gray-900">Branches</h1>
         <button
           onClick={() => setShowAdd(true)}
-          className="flex items-center gap-2 bg-blue-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl"
+          className="flex items-center gap-2 bg-lemon-400 text-gray-900 text-sm font-semibold px-4 py-2.5 rounded-xl"
         >
           <Plus size={16} />
           Add Branch
@@ -192,20 +192,18 @@ export default function Branches() {
           {branches.map((branch) => (
             <div key={branch.id} className="bg-white rounded-2xl px-5 py-4 shadow-sm flex items-center gap-3">
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <p className="font-semibold text-gray-900">{branch.name}</p>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                    branch.isActive ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-500'
-                  }`}>
-                    {branch.isActive ? 'Active' : 'Inactive'}
-                  </span>
-                </div>
+                <p className="font-semibold text-gray-900 truncate">{branch.name}</p>
+                <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full font-medium ${
+                  branch.isActive ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-500'
+                }`}>
+                  {branch.isActive ? 'Active' : 'Inactive'}
+                </span>
               </div>
 
               <div className="flex items-center gap-1 flex-shrink-0">
                 <button
                   onClick={() => setEditing(branch)}
-                  className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
+                  className="p-2 text-gray-400 hover:text-lemon-600 hover:bg-lemon-50 rounded-lg"
                 >
                   <Pencil size={15} />
                 </button>

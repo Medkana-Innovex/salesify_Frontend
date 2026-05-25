@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { LogOut } from 'lucide-react'
+import { LogOut, TrendingUp } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import * as authApi from '../../api/auth'
 import BottomNav from './BottomNav'
@@ -24,7 +24,12 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       <Sidebar />
       {/* Mobile top bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 flex items-center justify-between px-4 py-3 z-40">
-        <span className="font-bold text-gray-900 text-lg">Salesify</span>
+        <div className="flex items-center gap-2">
+          <div className="bg-lemon-400 rounded-xl p-1.5">
+            <TrendingUp size={16} color="#3d5a1a" />
+          </div>
+          <span className="font-bold text-lemon-600 text-lg">Salesify</span>
+        </div>
         <button onClick={handleLogout} className="text-gray-500 hover:text-red-500 p-1">
           <LogOut size={22} />
         </button>

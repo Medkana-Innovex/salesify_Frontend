@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Users, BarChart2 } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { useAuth } from '../context/AuthContext'
 import * as dashboardApi from '../api/dashboard'
@@ -16,11 +17,12 @@ function getGreeting() {
 function Avatar({ name }: { name: string }) {
   const initials = name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()
   return (
-    <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-semibold text-sm flex-shrink-0">
+    <div className="w-10 h-10 rounded-full bg-lemon-100 text-lemon-600 flex items-center justify-center font-semibold text-sm flex-shrink-0">
       {initials}
     </div>
   )
 }
+
 
 export default function Dashboard() {
   const { businessName } = useAuth()
@@ -65,7 +67,7 @@ export default function Dashboard() {
       {/* Summary Card */}
       <div
         className="rounded-2xl p-5 mb-5 overflow-hidden relative"
-        style={{ background: 'linear-gradient(135deg, #3b5fc0 0%, #5b7cf5 100%)' }}
+        style={{ background: 'linear-gradient(135deg, #557d24 0%, #8dc63f 100%)' }}
       >
         <div className="absolute right-0 top-0 w-32 h-32 rounded-full bg-white/10 translate-x-8 -translate-y-8" />
         <div className="absolute right-8 bottom-0 w-20 h-20 rounded-full bg-white/10 translate-y-6" />
@@ -106,8 +108,8 @@ export default function Dashboard() {
             <AreaChart data={trend} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="salesGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#4b6ee8" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="#4b6ee8" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#8dc63f" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="#8dc63f" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis
@@ -125,10 +127,10 @@ export default function Dashboard() {
               <Area
                 type="monotone"
                 dataKey="total"
-                stroke="#4b6ee8"
+                stroke="#8dc63f"
                 strokeWidth={2.5}
                 fill="url(#salesGrad)"
-                dot={{ fill: '#4b6ee8', r: 4 }}
+                dot={{ fill: '#8dc63f', r: 4 }}
                 activeDot={{ r: 6 }}
               />
             </AreaChart>
@@ -158,12 +160,12 @@ export default function Dashboard() {
                     <p className="font-semibold text-gray-800 text-sm truncate">{entry.fullName}</p>
                     <div className="text-right ml-2">
                       <p className="text-gray-800 font-bold text-sm">ETB {entry.totalSales.toFixed(2)}</p>
-                      <p className="text-blue-500 text-xs">{entry.transactionCount} tx</p>
+                      <p className="text-lemon-500 text-xs">{entry.transactionCount} tx</p>
                     </div>
                   </div>
                   <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-blue-500 rounded-full"
+                      className="h-full bg-lemon-400 rounded-full"
                       style={{ width: `${(entry.totalSales / maxSales) * 100}%` }}
                     />
                   </div>
@@ -182,16 +184,16 @@ export default function Dashboard() {
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => navigate('/staff')}
-            className="flex flex-col items-center gap-2 bg-amber-50 rounded-xl py-5 text-gray-700 font-semibold text-sm"
+            className="flex flex-col items-center gap-2 bg-lemon-100 rounded-xl py-5 text-lemon-600 font-semibold text-sm"
           >
-            <span className="text-2xl">👤</span>
+            <Users size={28} />
             Add Staff
           </button>
           <button
             onClick={() => navigate('/reports')}
-            className="flex flex-col items-center gap-2 bg-purple-50 rounded-xl py-5 text-gray-700 font-semibold text-sm"
+            className="flex flex-col items-center gap-2 bg-lemon-100 rounded-xl py-5 text-lemon-600 font-semibold text-sm"
           >
-            <span className="text-2xl">📊</span>
+            <BarChart2 size={28} />
             View Reports
           </button>
         </div>

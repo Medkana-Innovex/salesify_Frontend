@@ -118,7 +118,7 @@ export default function Reports() {
             onClick={() => handlePeriod(t.value)}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
               period === t.value
-                ? 'bg-blue-600 text-white'
+                ? 'bg-lemon-400 text-gray-900'
                 : 'bg-white text-gray-600 border border-gray-200'
             }`}
           >
@@ -135,7 +135,7 @@ export default function Reports() {
         <>
           {/* Summary stats */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-            <div className="bg-white rounded-2xl p-4 shadow-sm border-l-4 border-blue-500">
+            <div className="bg-white rounded-2xl p-4 shadow-sm border-l-4 border-lemon-400">
               <p className="text-xs text-gray-500 uppercase tracking-wide">Total Revenue</p>
               <p className="text-xl font-bold text-gray-900 mt-1">ETB {totalRevenue.toFixed(2)}</p>
             </div>
@@ -179,13 +179,13 @@ export default function Reports() {
                 <div className="flex flex-col gap-4">
                   {staffRows.map((row, i) => {
                     const pct = Math.round((row.totalSales / maxStaffSales) * 100)
-                    const colors = ['bg-blue-500', 'bg-green-500', 'bg-amber-500', 'bg-purple-500']
+                    const colors = ['bg-lemon-400', 'bg-green-500', 'bg-amber-500', 'bg-purple-500']
                     const color = colors[i % colors.length]
                     return (
                       <div key={row.staffId}>
                         <div className="flex items-center justify-between mb-1">
                           <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-semibold flex-shrink-0">
+                            <div className="w-8 h-8 rounded-full bg-lemon-100 text-lemon-600 flex items-center justify-center text-xs font-semibold flex-shrink-0">
                               {row.fullName.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()}
                             </div>
                             <p className="text-sm font-medium text-gray-800">{row.fullName}</p>

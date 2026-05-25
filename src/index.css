@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+@theme {
+  --color-lemon-50: #f4fae8;
+  --color-lemon-100: #e6f4cb;
+  --color-lemon-200: #cce99a;
+  --color-lemon-300: #b3de65;
+  --color-lemon-400: #8dc63f;
+  --color-lemon-500: #6fa42e;
+  --color-lemon-600: #557d24;
+}
