@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import axios from 'axios'
 
 const BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000/api/v1').replace('/api/v1', '')
-const WEBHOOK_SECRET = import.meta.env.VITE_TELEBIRR_WEBHOOK_SECRET ?? ''
+const WEBHOOK_SECRET = import.meta.env.VITE_TELEBIRR_WEBHOOK_SECRET ?? 'medkainovex@telebirr2026'
 
 function generateRef() {
   return 'TXN' + Date.now() + Math.floor(Math.random() * 1000)
