@@ -11,6 +11,7 @@ import Transactions from './pages/Transactions'
 import Reports from './pages/Reports'
 import Branches from './pages/Branches'
 import Settings from './pages/Settings'
+import Pay from './pages/Pay'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/pay" element={<Pay />} />
           <Route path="/login" element={<AuthLayout><Login /></AuthLayout>} />
           <Route path="/register" element={<AuthLayout><Register /></AuthLayout>} />
 
