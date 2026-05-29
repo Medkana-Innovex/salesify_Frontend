@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Download } from 'lucide-react'
+import { Download, BarChart2 } from 'lucide-react'
 import * as reportsApi from '../api/reports'
 
 type Period = 'daily' | 'weekly' | 'monthly' | 'all'
@@ -22,21 +22,27 @@ interface StaffRow {
 function getPeriodDates(period: Period): { from?: string; to?: string } {
   const now = new Date()
   const fmt = (d: Date) => d.toISOString().slice(0, 10)
-
-  if (period === 'daily') {
-    return { from: fmt(now), to: fmt(now) }
-  }
+  if (period === 'daily') return { from: fmt(now), to: fmt(now) }
   if (period === 'weekly') {
-    const from = new Date(now)
-    from.setDate(now.getDate() - 6)
+    const from = new Date(now); from.setDate(now.getDate() - 6)
     return { from: fmt(from), to: fmt(now) }
   }
   if (period === 'monthly') {
-    const from = new Date(now.getFullYear(), now.getMonth(), 1)
-    return { from: fmt(from), to: fmt(now) }
+    return { from: fmt(new Date(now.getFullYear(), now.getMonth(), 1)), to: fmt(now) }
   }
   return {}
 }
+
+function initials(name: string) {
+  return name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()
+}
+
+const tabs: { label: string; value: Period }[] = [
+  { label: 'Today', value: 'daily' },
+  { label: 'This Week', value: 'weekly' },
+  { label: 'This Month', value: 'monthly' },
+  { label: 'All Time', value: 'all' },
+]
 
 export default function Reports() {
   const [period, setPeriod] = useState<Period>('weekly')
@@ -87,23 +93,18 @@ export default function Reports() {
   const totalTx = summary.reduce((s, b) => s + b.transactionCount, 0)
   const avgTx = totalTx > 0 ? totalRevenue / totalTx : 0
   const maxStaffSales = Math.max(...staffRows.map((r) => r.totalSales), 1)
-
-  const tabs: { label: string; value: Period }[] = [
-    { label: 'Daily', value: 'daily' },
-    { label: 'Weekly', value: 'weekly' },
-    { label: 'Monthly', value: 'monthly' },
-    { label: 'All', value: 'all' },
-  ]
+  const hasData = totalTx > 0
 
   return (
-    <div className="px-4 pt-6 pb-4 max-w-5xl mx-auto">
+    <div className="px-4 pt-6 pb-6 max-w-5xl mx-auto">
+
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-5">
         <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
         <button
           onClick={handleExport}
-          disabled={exporting}
-          className="flex items-center gap-2 bg-lemon-400 text-gray-900 text-sm font-semibold px-4 py-2.5 rounded-xl disabled:opacity-60"
+          disabled={exporting || !hasData}
+          className="flex items-center gap-2 bg-lemon-400 hover:bg-lemon-500 active:scale-95 text-white text-sm font-semibold px-4 py-2.5 rounded-xl disabled:opacity-50 transition-all duration-150"
         >
           <Download size={15} />
           {exporting ? 'Exporting…' : 'Export PDF'}
@@ -111,15 +112,15 @@ export default function Reports() {
       </div>
 
       {/* Period tabs */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
         {tabs.map((t) => (
           <button
             key={t.value}
             onClick={() => handlePeriod(t.value)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-150 whitespace-nowrap flex-shrink-0 ${
               period === t.value
-                ? 'bg-lemon-400 text-gray-900'
-                : 'bg-white text-gray-600 border border-gray-200'
+                ? 'bg-lemon-400 text-white shadow-sm'
+                : 'bg-white text-gray-500 border border-gray-200 hover:border-lemon-300'
             }`}
           >
             {t.label}
@@ -131,48 +132,62 @@ export default function Reports() {
         <div className="flex flex-col gap-4">
           {[1, 2, 3].map((i) => <div key={i} className="h-24 bg-white rounded-2xl animate-pulse" />)}
         </div>
+      ) : !hasData ? (
+        <div className="flex flex-col items-center justify-center py-24 text-center">
+          <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
+            <BarChart2 size={24} className="text-gray-400" />
+          </div>
+          <p className="font-semibold text-gray-600 mb-1">No data for this period</p>
+          <p className="text-sm text-gray-400">Try selecting a different time range</p>
+        </div>
       ) : (
         <>
-          {/* Summary stats */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-            <div className="bg-white rounded-2xl p-4 shadow-sm border-l-4 border-lemon-400">
-              <p className="text-xs text-gray-500 uppercase tracking-wide">Total Revenue</p>
-              <p className="text-xl font-bold text-gray-900 mt-1">ETB {totalRevenue.toFixed(2)}</p>
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-3 mb-5">
+            <div className="bg-lemon-50 rounded-2xl p-4">
+              <p className="text-xs text-gray-400 mb-1">Revenue</p>
+              <p className="text-lg font-bold text-gray-900 leading-tight">
+                ETB {totalRevenue.toLocaleString('en-ET', { minimumFractionDigits: 2 })}
+              </p>
             </div>
-            <div className="bg-white rounded-2xl p-4 shadow-sm border-l-4 border-lemon-400">
-              <p className="text-xs text-gray-500 uppercase tracking-wide">Total Transactions</p>
-              <p className="text-xl font-bold text-gray-900 mt-1">{totalTx}</p>
+            <div className="bg-lemon-50 rounded-2xl p-4">
+              <p className="text-xs text-gray-400 mb-1">Transactions</p>
+              <p className="text-lg font-bold text-gray-900">{totalTx}</p>
             </div>
-            <div className="bg-white rounded-2xl p-4 shadow-sm border-l-4 border-lemon-400 col-span-2 md:col-span-1">
-              <p className="text-xs text-gray-500 uppercase tracking-wide">Avg Transaction</p>
-              <p className="text-xl font-bold text-gray-900 mt-1">ETB {avgTx.toFixed(2)}</p>
+            <div className="bg-lemon-50 rounded-2xl p-4">
+              <p className="text-xs text-gray-400 mb-1">Avg / Tx</p>
+              <p className="text-lg font-bold text-gray-900 leading-tight">
+                ETB {avgTx.toLocaleString('en-ET', { minimumFractionDigits: 2 })}
+              </p>
             </div>
           </div>
 
-          {/* Desktop: side by side */}
-          <div className="md:grid md:grid-cols-2 md:gap-5">
+          {/* Branch + Staff side by side on desktop */}
+          <div className="md:grid md:grid-cols-2 md:gap-4">
 
             {/* Branch summary */}
             {summary.length > 0 && (
-              <div className="bg-white rounded-2xl p-4 shadow-sm mb-5 md:mb-0">
-                <p className="font-semibold text-gray-800 mb-4">Branch Summary</p>
+              <div className="bg-white rounded-2xl p-5 shadow-sm mb-4 md:mb-0">
+                <p className="font-semibold text-gray-800 text-sm mb-4">Branch Breakdown</p>
                 <div className="flex flex-col gap-4">
                   {summary.map((b) => {
                     const pct = totalRevenue > 0 ? Math.round((Number(b.totalSales) / totalRevenue) * 100) : 0
                     return (
                       <div key={b.branchId}>
-                        <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center justify-between mb-1.5">
                           <div>
                             <p className="font-medium text-gray-800 text-sm">{b.branchName}</p>
                             <p className="text-gray-400 text-xs">{b.transactionCount} transactions</p>
                           </div>
                           <div className="text-right">
-                            <p className="font-bold text-gray-900 text-sm">ETB {Number(b.totalSales).toFixed(2)}</p>
-                            <p className="text-xs text-lemon-600 font-medium">{pct}%</p>
+                            <p className="font-bold text-gray-900 text-sm">
+                              ETB {Number(b.totalSales).toLocaleString('en-ET', { minimumFractionDigits: 2 })}
+                            </p>
+                            <p className="text-xs text-lemon-600 font-semibold">{pct}%</p>
                           </div>
                         </div>
                         <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-lemon-400 rounded-full" style={{ width: `${pct}%` }} />
+                          <div className="h-full bg-lemon-400 rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
                         </div>
                       </div>
                     )
@@ -182,34 +197,38 @@ export default function Reports() {
             )}
 
             {/* Staff performance */}
-            <div className="bg-white rounded-2xl p-4 shadow-sm mb-5 md:mb-0">
-              <p className="font-semibold text-gray-800 mb-4">Staff Performance</p>
+            <div className="bg-white rounded-2xl p-5 shadow-sm mb-4 md:mb-0">
+              <p className="font-semibold text-gray-800 text-sm mb-4">Staff Performance</p>
               {staffRows.length === 0 ? (
-                <p className="text-gray-400 text-sm text-center py-4">No data for this period</p>
+                <p className="text-gray-400 text-sm text-center py-6">No staff data</p>
               ) : (
                 <div className="flex flex-col gap-4">
                   {staffRows.map((row, i) => {
                     const pct = Math.round((row.totalSales / maxStaffSales) * 100)
-                    const colors = ['bg-lemon-400', 'bg-lemon-500', 'bg-lemon-300', 'bg-lemon-600']
-                    const color = colors[i % colors.length]
                     return (
                       <div key={row.staffId}>
-                        <div className="flex items-center justify-between mb-1">
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-lemon-100 text-lemon-600 flex items-center justify-center text-xs font-semibold flex-shrink-0">
-                              {row.fullName.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()}
+                        <div className="flex items-center justify-between mb-1.5">
+                          <div className="flex items-center gap-2.5">
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                              i === 0 ? 'bg-lemon-400 text-white' : 'bg-lemon-100 text-lemon-600'
+                            }`}>
+                              {initials(row.fullName)}
                             </div>
-                            <p className="text-sm font-medium text-gray-800">{row.fullName}</p>
+                            <div>
+                              <p className="text-sm font-medium text-gray-800 leading-tight">{row.fullName}</p>
+                              <p className="text-xs text-gray-400">{row.transactionCount} tx</p>
+                            </div>
                           </div>
-                          <div className="text-right">
-                            <p className="text-sm font-bold text-gray-900">ETB {row.totalSales.toFixed(2)}</p>
-                            <p className="text-xs text-gray-400">{pct}%</p>
-                          </div>
+                          <p className="text-sm font-bold text-gray-900">
+                            ETB {row.totalSales.toLocaleString('en-ET', { minimumFractionDigits: 2 })}
+                          </p>
                         </div>
                         <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                          <div className={`h-full ${color} rounded-full`} style={{ width: `${pct}%` }} />
+                          <div
+                            className="h-full bg-lemon-400 rounded-full transition-all duration-500"
+                            style={{ width: `${pct}%`, opacity: 1 - i * 0.12 }}
+                          />
                         </div>
-                        <p className="text-xs text-gray-400 mt-1">{row.transactionCount} transactions</p>
                       </div>
                     )
                   })}

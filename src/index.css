@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+svg { outline: none; }
+
 @theme {
   --color-lemon-50: #f4fae8;
   --color-lemon-100: #e6f4cb;
