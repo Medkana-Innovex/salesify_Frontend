@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext'
 import * as authApi from '../../api/auth'
 import BottomNav from './BottomNav'
 import Sidebar from './Sidebar'
+import TopLoader from '../ui/TopLoader'
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   const { user, signOut } = useAuth()
@@ -21,6 +22,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <TopLoader />
       <Sidebar />
       {/* Mobile top bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 flex items-center justify-between px-4 py-3 z-40">

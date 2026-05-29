@@ -1,16 +1,19 @@
 import axios from 'axios'
+import { loaderStart, loaderDone } from '../components/ui/TopLoader'
 
 const client = axios.create({ baseURL: import.meta.env.VITE_API_BASE_URL ?? '/api/v1' })
 
 client.interceptors.request.use((config) => {
+  loaderStart()
   const token = localStorage.getItem('accessToken')
   if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
 
 client.interceptors.response.use(
-  (res) => res,
+  (res) => { loaderDone(); return res },
   async (error) => {
+    loaderDone()
     const original = error.config
     if (error.response?.status === 401 && !original._retry) {
       original._retry = true
