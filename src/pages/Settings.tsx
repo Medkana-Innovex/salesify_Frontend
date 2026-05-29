@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Pencil, LogOut, Trash2, Building2, X } from 'lucide-react'
+import { Pencil, LogOut, Trash2, Building2 } from 'lucide-react'
 import * as businessApi from '../api/business'
 import * as authApi from '../api/auth'
 import { useAuth } from '../context/AuthContext'
