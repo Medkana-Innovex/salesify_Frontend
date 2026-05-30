@@ -1,4 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import SuperAdminLogin from './pages/superadmin/Login'
+import SuperAdminInsights from './pages/superadmin/Insights'
+import SuperAdminDashboard from './pages/superadmin/Dashboard'
+import BusinessDetail from './pages/superadmin/BusinessDetail'
+import SuperAdminSettings from './pages/superadmin/Settings'
 import { AuthProvider } from './context/AuthContext'
 import AppLayout from './components/layout/AppLayout'
 import AuthLayout from './components/layout/AuthLayout'
@@ -28,6 +33,12 @@ export default function App() {
           <Route path="/reports" element={<AppLayout><Reports /></AppLayout>} />
           <Route path="/branches" element={<AppLayout><Branches /></AppLayout>} />
           <Route path="/settings" element={<AppLayout><Settings /></AppLayout>} />
+
+          <Route path="/superadmin/login" element={<SuperAdminLogin />} />
+          <Route path="/superadmin" element={<SuperAdminInsights />} />
+          <Route path="/superadmin/businesses" element={<SuperAdminDashboard />} />
+          <Route path="/superadmin/businesses/:id" element={<BusinessDetail />} />
+          <Route path="/superadmin/settings" element={<SuperAdminSettings />} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
