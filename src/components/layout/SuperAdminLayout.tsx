@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { TrendingUp, LogOut, Building2, Settings, BarChart2 } from 'lucide-react'
+import TopLoader from '../ui/TopLoader'
 
 const navItems = [
   { to: '/superadmin', icon: BarChart2, label: 'Insights' },
@@ -19,6 +20,7 @@ export default function SuperAdminLayout({ children }: { children: ReactNode }) 
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
+      <TopLoader />
 
       {/* Sidebar — desktop */}
       <aside className="hidden md:flex fixed left-0 top-0 h-full w-60 bg-white border-r border-gray-100 flex-col z-50">
