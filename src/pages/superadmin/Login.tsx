@@ -45,7 +45,7 @@ export default function SuperAdminLogin() {
             Platform<br />Control Center
           </h2>
           <p className="text-white/60 text-sm leading-relaxed">
-            Manage all businesses, branches, and platform fee configuration.
+            Manage all businesses, branches, and platform insights.
           </p>
         </div>
         <p className="text-white/30 text-xs">© 2026 Medkainovex</p>
