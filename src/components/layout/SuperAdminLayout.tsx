@@ -1,12 +1,11 @@
 import { type ReactNode } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { TrendingUp, LogOut, Building2, Settings, BarChart2 } from 'lucide-react'
+import { TrendingUp, LogOut, Building2, BarChart2 } from 'lucide-react'
 import TopLoader from '../ui/TopLoader'
 
 const navItems = [
   { to: '/superadmin', icon: BarChart2, label: 'Insights' },
   { to: '/superadmin/businesses', icon: Building2, label: 'Businesses' },
-  { to: '/superadmin/settings', icon: Settings, label: 'Settings' },
 ]
 
 export default function SuperAdminLayout({ children }: { children: ReactNode }) {

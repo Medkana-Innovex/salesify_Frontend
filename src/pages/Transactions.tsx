@@ -19,7 +19,7 @@ interface FilterPanelProps {
   branches: Branch[]
   showBranch: boolean
   onChange: (f: { branchId: string; from: string; to: string }) => void
-  onApply: () => void
+  onApply: (reset?: boolean) => void
   onClear: () => void
   onClose: () => void
 }
@@ -61,7 +61,7 @@ function FilterPanel({ filters, branches, showBranch, onChange, onApply, onClear
             </div>
             <div className="flex gap-3 px-6 py-4 border-t border-gray-100">
               <button onClick={onClear} className="flex-1 border border-gray-200 text-gray-600 text-sm font-medium py-3 rounded-xl">Clear</button>
-              <button onClick={() => { onApply(); onClose() }} className="flex-1 bg-lemon-400 text-white text-sm font-semibold py-3 rounded-xl">Apply</button>
+              <button onClick={() => { onApply(true); onClose() }} className="flex-1 bg-lemon-400 text-white text-sm font-semibold py-3 rounded-xl">Apply</button>
             </div>
           </div>
         </div>
@@ -89,12 +89,14 @@ function FilterPanel({ filters, branches, showBranch, onChange, onApply, onClear
           <input type="date" value={filters.to} onChange={(e) => onChange({ ...filters, to: e.target.value })}
             className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-lemon-400" />
         </div>
-        <button onClick={onApply} className="bg-lemon-400 hover:bg-lemon-500 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">Apply</button>
+        <button onClick={() => onApply(true)} className="bg-lemon-400 hover:bg-lemon-500 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">Apply</button>
         <button onClick={onClear} className="text-gray-500 text-sm font-medium px-3 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors">Clear</button>
       </div>
     </>
   )
 }
+
+const LIMIT = 20
 
 export default function Transactions() {
   const { user } = useAuth()
@@ -104,25 +106,31 @@ export default function Transactions() {
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState({ branchId: '', from: '', to: '' })
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [page, setPage] = useState(1)
+  const [hasMore, setHasMore] = useState(false)
 
   const isFiltered = !!(filters.branchId || filters.from || filters.to)
 
-  const fetchTransactions = async () => {
-    setLoading(true)
+  const fetchTransactions = async (reset = true) => {
+    const nextPage = reset ? 1 : page + 1
+    reset ? setLoading(true) : setLoadingMore(true)
     try {
-      const params: any = {}
+      const params: any = { page: nextPage, limit: LIMIT }
       if (filters.branchId) params.branchId = filters.branchId
       if (filters.from) params.from = filters.from
       if (filters.to) params.to = filters.to
-      const { data } = await transactionsApi.listTransactions(params)
-      setTransactions(data)
+      const { data: res } = await transactionsApi.listTransactions(params)
+      setTransactions((prev) => reset ? res.data : [...prev, ...res.data])
+      setHasMore(res.hasMore)
+      setPage(nextPage)
     } finally {
-      setLoading(false)
+      reset ? setLoading(false) : setLoadingMore(false)
     }
   }
 
   useEffect(() => {
-    fetchTransactions()
+    fetchTransactions(true)
     if (user?.role === 'general_manager') {
       branchesApi.listBranches().then((res) => setBranches(res.data))
     }
@@ -130,7 +138,7 @@ export default function Transactions() {
 
   const handleClear = () => {
     setFilters({ branchId: '', from: '', to: '' })
-    setTimeout(fetchTransactions, 0)
+    setTimeout(() => fetchTransactions(true), 0)
   }
 
   const filtered = transactions.filter((tx) => {
@@ -171,7 +179,7 @@ export default function Transactions() {
           branches={branches}
           showBranch={user?.role === 'general_manager'}
           onChange={setFilters}
-          onApply={fetchTransactions}
+          onApply={(reset = true) => fetchTransactions(reset)}
           onClear={handleClear}
           onClose={() => setShowFilters(false)}
         />
@@ -247,6 +255,16 @@ export default function Transactions() {
               </div>
             </div>
           ))}
+
+          {hasMore && (
+            <button
+              onClick={() => fetchTransactions(false)}
+              disabled={loadingMore}
+              className="w-full py-3 text-sm font-medium text-lemon-600 bg-lemon-50 hover:bg-lemon-100 rounded-2xl transition-colors disabled:opacity-60"
+            >
+              {loadingMore ? 'Loading…' : 'Load More'}
+            </button>
+          )}
         </div>
       )}
     </div>

@@ -23,14 +23,9 @@ export const saLogin = (phone: string, password: string) =>
 export const saGetInsights = () =>
   client.get('/superadmin/insights')
 
-export const saListBusinesses = () =>
-  client.get('/superadmin/businesses')
+export const saListBusinesses = (page = 1, limit = 15) =>
+  client.get('/superadmin/businesses', { params: { page, limit } })
 
-export const saGetBusiness = (id: string) =>
-  client.get(`/superadmin/businesses/${id}`)
+export const saGetBusiness = (id: string, txPage = 1, txLimit = 20) =>
+  client.get(`/superadmin/businesses/${id}`, { params: { txPage, txLimit } })
 
-export const saGetConfig = () =>
-  client.get('/superadmin/config')
-
-export const saUpdateConfig = (feeAmount: number, minTxAmount: number) =>
-  client.patch('/superadmin/config', { feeAmount, minTxAmount })

@@ -28,13 +28,14 @@ const ERROR_MESSAGES: Record<string, { title: string; hint: string }> = {
   'Staff not found':                      { title: 'Invalid staff code',       hint: 'Make sure the staff code is correct for this branch.' },
   'Staff does not belong to this branch': { title: 'Wrong staff code',         hint: 'This staff member is not part of the selected branch.' },
   'No branch assigned':                   { title: 'Branch not configured',    hint: 'Contact your manager — no branch is set up for this account.' },
+  'Duplicate transaction — this Telebirr reference has already been recorded': { title: 'Duplicate transaction', hint: 'This reference has already been recorded. Try again.' },
 }
 
 function friendlyError(raw: string) {
   return ERROR_MESSAGES[raw] ?? { title: 'Payment failed', hint: raw }
 }
 
-type SuccessData = { transactionId: string; amount: number; tipAmount: number }
+type SuccessData = { transactionId: string; amount: number; tipAmount: number; platformFee: number }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -68,18 +69,20 @@ export default function Pay() {
     setError('')
     setLoading(true)
     try {
+      const platformFee = amount > 50 ? 2 : 0
       const payload = {
         businessPhone: form.businessPhone,
         staffCode: form.staffCode,
         amount,
         ...(tip > 0 ? { tipAmount: tip } : {}),
+        ...(platformFee > 0 ? { platformFee } : {}),
         telebirrRef: generateRef(),
         transactedAt: new Date().toISOString(),
       }
       const { data } = await axios.post(`${BASE_URL}/webhook/telebirr`, payload, {
         headers: { 'x-telebirr-secret': WEBHOOK_SECRET },
       })
-      setSuccess({ transactionId: data.transactionId, amount, tipAmount: tip })
+      setSuccess({ transactionId: data.transactionId, amount, tipAmount: tip, platformFee })
     } catch (err: any) {
       setError(err.response?.data?.message ?? 'Payment failed. Please try again.')
       triggerShake()
@@ -116,17 +119,21 @@ export default function Pay() {
               <span className="font-bold text-gray-900">ETB {fmt(success.amount)}</span>
             </div>
             {success.tipAmount > 0 && (
-              <>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-500 text-sm">Tip</span>
-                  <span className="font-semibold text-gray-700">ETB {fmt(success.tipAmount)}</span>
-                </div>
-                <div className="flex justify-between items-center pt-2 border-t border-lemon-200">
-                  <span className="text-gray-600 text-sm font-medium">Total</span>
-                  <span className="font-bold text-lemon-600">ETB {fmt(success.amount + success.tipAmount)}</span>
-                </div>
-              </>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500 text-sm">Tip</span>
+                <span className="font-semibold text-gray-700">ETB {fmt(success.tipAmount)}</span>
+              </div>
             )}
+            <div className="flex justify-between items-center">
+              <span className="text-gray-500 text-sm">Platform Fee</span>
+              <span className="font-semibold text-gray-700">
+                {success.platformFee > 0 ? `ETB ${fmt(success.platformFee)}` : 'None'}
+              </span>
+            </div>
+            <div className="flex justify-between items-center pt-2 border-t border-lemon-200">
+              <span className="text-gray-600 text-sm font-medium">Total</span>
+              <span className="font-bold text-lemon-600">ETB {fmt(success.amount + success.tipAmount)}</span>
+            </div>
             <div className="flex justify-between items-center pt-2 border-t border-gray-100">
               <span className="text-gray-500 text-sm">Ref</span>
               <span className="font-mono text-xs text-gray-400 truncate max-w-[160px]">{success.transactionId}</span>

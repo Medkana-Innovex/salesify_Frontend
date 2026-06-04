@@ -17,17 +17,40 @@ function initials(name: string) {
   return name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()
 }
 
+const LIMIT = 15
+
 export default function SuperAdminDashboard() {
   const navigate = useNavigate()
   const [businesses, setBusinesses] = useState<Business[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [page, setPage] = useState(1)
+  const [hasMore, setHasMore] = useState(false)
 
   useEffect(() => {
-    saListBusinesses()
-      .then((res) => setBusinesses(res.data))
+    saListBusinesses(1, LIMIT)
+      .then((res) => {
+        setBusinesses(res.data.data)
+        setHasMore(res.data.hasMore)
+      })
       .catch((err) => { if (err.response?.status === 401) navigate('/superadmin/login') })
       .finally(() => setLoading(false))
   }, [])
+
+  const loadMore = async () => {
+    setLoadingMore(true)
+    try {
+      const nextPage = page + 1
+      const res = await saListBusinesses(nextPage, LIMIT)
+      setBusinesses((prev) => [...prev, ...res.data.data])
+      setHasMore(res.data.hasMore)
+      setPage(nextPage)
+    } catch (err: any) {
+      if (err.response?.status === 401) navigate('/superadmin/login')
+    } finally {
+      setLoadingMore(false)
+    }
+  }
 
   return (
     <SuperAdminLayout>
@@ -76,6 +99,16 @@ export default function SuperAdminDashboard() {
               </div>
             </button>
           ))}
+
+          {hasMore && (
+            <button
+              onClick={loadMore}
+              disabled={loadingMore}
+              className="md:col-span-2 w-full py-3 text-sm font-medium text-lemon-600 bg-lemon-50 hover:bg-lemon-100 rounded-2xl transition-colors disabled:opacity-60"
+            >
+              {loadingMore ? 'Loading…' : 'Load More'}
+            </button>
+          )}
         </div>
       )}
     </SuperAdminLayout>
