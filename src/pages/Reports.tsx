@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
-import { Download, BarChart2 } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Download, BarChart2, ChevronDown } from 'lucide-react'
+import * as XLSX from 'xlsx'
 import * as reportsApi from '../api/reports'
 
 type Period = 'daily' | 'weekly' | 'monthly' | 'all'
@@ -50,6 +51,8 @@ export default function Reports() {
   const [staffRows, setStaffRows] = useState<StaffRow[]>([])
   const [loading, setLoading] = useState(true)
   const [exporting, setExporting] = useState(false)
+  const [exportOpen, setExportOpen] = useState(false)
+  const exportRef = useRef<HTMLDivElement>(null)
 
   const fetchReports = async (p: Period) => {
     setLoading(true)
@@ -68,12 +71,24 @@ export default function Reports() {
 
   useEffect(() => { fetchReports(period) }, [])
 
+  useEffect(() => {
+    if (!exportOpen) return
+    const handler = (e: MouseEvent) => {
+      if (exportRef.current && !exportRef.current.contains(e.target as Node)) {
+        setExportOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [exportOpen])
+
   const handlePeriod = (p: Period) => {
     setPeriod(p)
     fetchReports(p)
   }
 
-  const handleExport = async () => {
+  const handleExportPdf = async () => {
+    setExportOpen(false)
     setExporting(true)
     try {
       const params = getPeriodDates(period)
@@ -89,6 +104,57 @@ export default function Reports() {
     }
   }
 
+  const handleExportCsv = () => {
+    setExportOpen(false)
+    const branchRows = summary.map((b) => ({
+      Section: 'Branch',
+      Name: b.branchName,
+      Branch: '',
+      'Total Sales (ETB)': Number(b.totalSales).toFixed(2),
+      Transactions: b.transactionCount,
+    }))
+    const staffCsvRows = staffRows.map((r) => ({
+      Section: 'Staff',
+      Name: r.fullName,
+      Branch: r.branchName,
+      'Total Sales (ETB)': r.totalSales.toFixed(2),
+      Transactions: r.transactionCount,
+    }))
+    const allRows = [...branchRows, ...staffCsvRows]
+    const header = Object.keys(allRows[0]).join(',')
+    const body = allRows.map((r) => Object.values(r).map((v) => `"${v}"`).join(',')).join('\n')
+    const csv = `${header}\n${body}`
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }))
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'salesify-report.csv'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const handleExportExcel = () => {
+    setExportOpen(false)
+    const branchSheet = XLSX.utils.json_to_sheet(
+      summary.map((b) => ({
+        Branch: b.branchName,
+        'Total Sales (ETB)': Number(b.totalSales),
+        Transactions: b.transactionCount,
+      }))
+    )
+    const staffSheet = XLSX.utils.json_to_sheet(
+      staffRows.map((r) => ({
+        'Staff Name': r.fullName,
+        Branch: r.branchName,
+        'Total Sales (ETB)': r.totalSales,
+        Transactions: r.transactionCount,
+      }))
+    )
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, branchSheet, 'Branch Summary')
+    XLSX.utils.book_append_sheet(wb, staffSheet, 'Staff Performance')
+    XLSX.writeFile(wb, 'salesify-report.xlsx')
+  }
+
   const totalRevenue = summary.reduce((s, b) => s + Number(b.totalSales), 0)
   const totalTx = summary.reduce((s, b) => s + b.transactionCount, 0)
   const avgTx = totalTx > 0 ? totalRevenue / totalTx : 0
@@ -101,14 +167,44 @@ export default function Reports() {
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
-        <button
-          onClick={handleExport}
-          disabled={exporting || !hasData}
-          className="flex items-center gap-2 bg-lemon-400 hover:bg-lemon-500 active:scale-95 text-white text-sm font-semibold px-4 py-2.5 rounded-xl disabled:opacity-50 transition-all duration-150"
-        >
-          <Download size={15} />
-          {exporting ? 'Exporting…' : 'Export PDF'}
-        </button>
+        <div ref={exportRef} className="relative">
+          <div className="flex">
+            <button
+              onClick={handleExportPdf}
+              disabled={exporting || !hasData}
+              className="flex items-center gap-2 bg-lemon-400 hover:bg-lemon-500 active:scale-95 text-white text-sm font-semibold px-4 py-2.5 rounded-l-xl disabled:opacity-50 transition-all duration-150"
+            >
+              <Download size={15} />
+              {exporting ? 'Exporting…' : 'Export PDF'}
+            </button>
+            <button
+              onClick={() => setExportOpen((o) => !o)}
+              disabled={exporting || !hasData}
+              className="flex items-center bg-lemon-500 hover:bg-lemon-600 active:scale-95 text-white px-2 py-2.5 rounded-r-xl border-l border-lemon-600 disabled:opacity-50 transition-all duration-150"
+              aria-label="More export options"
+            >
+              <ChevronDown size={14} />
+            </button>
+          </div>
+
+          {exportOpen && (
+            <div className="absolute right-0 mt-1 w-44 bg-white border border-gray-200 rounded-xl shadow-lg z-20 py-1 overflow-hidden">
+              {[
+                { label: 'Export PDF', action: handleExportPdf },
+                { label: 'Export CSV', action: handleExportCsv },
+                { label: 'Export Excel (.xlsx)', action: handleExportExcel },
+              ].map(({ label, action }) => (
+                <button
+                  key={label}
+                  onClick={action}
+                  className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-lemon-50 hover:text-lemon-700 transition-colors"
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Period tabs */}
